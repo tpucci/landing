@@ -3,7 +3,6 @@ import { Link } from "@builder.io/qwik-city";
 
 import { IconTwitter } from "~/components/icons/IconTwitter";
 import { IconGithub } from "~/components/icons/IconGithub";
-import { IconLinkedIn } from "../icons/IconLinkedIn";
 
 export default component$(() => {
   const links = [
