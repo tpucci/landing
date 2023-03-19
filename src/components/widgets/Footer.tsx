@@ -52,36 +52,7 @@ export default component$(() => {
               </Link>
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              My name is Thomas.
-              <br />I write and speak about architecture learnings, my first
-              product{" "}
-              <a
-                href="cadence.page"
-                class="dark:text-primary-300 text-primary-700 hover:underline"
-                target="_blank"
-              >
-                cadence.page
-              </a>
-              , and the indie maker journey.
-              <br /> ❄️ Ski lover and amateur chef 🍷
-              <br />
-              This is my personal blog 🙂 Feel free to reach me on{" "}
-              <a
-                href="https://twitter.com/Thomas_Pucci"
-                class="text-gray-800 dark:text-gray-300 hover:underline"
-                target="_blank"
-              >
-                Twitter
-              </a>{" "}
-              (DM open !) or{" "}
-              <a
-                href="https://www.linkedin.com/in/thomaspucci/"
-                class="text-gray-800 dark:text-gray-300 hover:underline"
-                target="_blank"
-              >
-                LinkedIn
-              </a>
-              .
+              WIP.
             </div>
           </div>
           <div class="hidden lg:block col-span-2" />
