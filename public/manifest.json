@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "cadence",
+  "short_name": "Cadence",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Notion's, Jira's and Linear's issues dependencies graph."
+}
