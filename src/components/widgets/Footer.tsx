@@ -7,23 +7,8 @@ import { IconGithub } from "~/components/icons/IconGithub";
 export default component$(() => {
   const links = [
     {
-      title: "Current Project",
-      items: [{ title: "Cadence", href: "https://cadence.page" }],
-    },
-    {
-      title: "Goodies",
-      items: [
-        { title: "My Dotfiles", href: "https://github.com/tpucci/dotfiles" },
-      ],
-    },
-    {
-      title: "Languages",
-      items: [
-        { title: "Typescript", href: "https://www.typescriptlang.org/" },
-        { title: "Dart", href: "https://dart.dev/" },
-        { title: "Elixir", href: "https://elixir-lang.org/" },
-        { title: "Kotlin", href: "https://kotlinlang.org/" },
-      ],
+      title: "Try it now",
+      items: [{ title: "Live Demo (work\u00A0in\u00A0progress)", href: "https://cadence.page" }],
     },
   ];
 
@@ -47,11 +32,11 @@ export default component$(() => {
           <div class="col-span-12 lg:col-span-4 pr-8">
             <div class="mb-2">
               <Link class="inline-block font-bold text-xl" href={"/"}>
-                Hey !
+                Cadence
               </Link>
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              WIP.
+              Tasks dependencies manager for Notion, Jira, Trello and Linear.
             </div>
           </div>
           <div class="hidden lg:block col-span-2" />
