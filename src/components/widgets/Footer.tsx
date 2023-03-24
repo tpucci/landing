@@ -8,7 +8,12 @@ export default component$(() => {
   const links = [
     {
       title: "Try it now",
-      items: [{ title: "Live Demo (work\u00A0in\u00A0progress)", href: "https://cadence.page" }],
+      items: [
+        {
+          title: "Live Demo (work\u00A0in\u00A0progress)",
+          href: "https://cadence.page",
+        },
+      ],
     },
   ];
 
@@ -26,7 +31,7 @@ export default component$(() => {
   ];
 
   return (
-    <footer class="border-t border-gray-200 dark:border-slate-800">
+    <footer class="border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-gray-900">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
           <div class="col-span-12 lg:col-span-4 pr-8">
@@ -36,7 +41,7 @@ export default component$(() => {
               </Link>
             </div>
             <div class="text-sm text-gray-600 dark:text-gray-400">
-              Tasks dependencies manager for Notion, Jira, Trello and Linear.
+              Issues dependencies graph.
             </div>
           </div>
           <div class="hidden lg:block col-span-2" />

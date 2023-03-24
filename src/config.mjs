@@ -2,8 +2,7 @@ export const SITE = {
   name: "Cadence",
 
   title: "Cadence",
-  description:
-    "Notion's, Jira's and Linear's issues dependencies graph.",
+  description: "Issues dependencies graph.",
 
   origin: "https://get.cadence.page",
   basePathname: "/",
