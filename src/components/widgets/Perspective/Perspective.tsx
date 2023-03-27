@@ -1,101 +1,124 @@
-import {
-  component$,
-  noSerialize,
-  NoSerialize,
-  useClientEffect$,
-  useSignal,
-  useStore,
-} from "@builder.io/qwik";
+import { component$, useClientEffect$, useSignal } from "@builder.io/qwik";
 import * as THREE from "three";
-import { lights } from "./lights";
-import { roundedRect } from "./roundedRect";
+import {
+  AnimationMixer,
+  Light,
+  Object3D,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-interface State {
-  scene: NoSerialize<THREE.Scene>;
-  camera: NoSerialize<THREE.PerspectiveCamera>;
-  renderer: NoSerialize<THREE.WebGLRenderer>;
+export function blenderWattsToLumens(watt: number) {
+  return watt / 100;
 }
+
+export const isLight = (object: Object3D): object is Light => {
+  // @ts-ignore
+  return object.isLight;
+};
 
 export const Perspective = component$(() => {
   const bg = useSignal<HTMLCanvasElement>();
-  const state = useStore<State>({
-    scene: noSerialize(undefined),
-    camera: noSerialize(undefined),
-    renderer: noSerialize(undefined),
-  });
 
   useClientEffect$(() => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({
-      canvas: bg.value,
-      alpha: true,
-    });
+    let camera: PerspectiveCamera,
+      controls: OrbitControls,
+      scene: Scene,
+      renderer: WebGLRenderer,
+      mixer: AnimationMixer;
+    const clock = new THREE.Clock();
+    init();
+    //render(); // remove when using next line for animation loop (requestAnimationFrame)
+    animate();
 
-    state.scene = noSerialize(scene);
-    state.camera = noSerialize(camera);
-    state.renderer = noSerialize(renderer);
+    function init() {
+      scene = new THREE.Scene();
 
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.position.setZ(30);
-    camera.position.setX(-3);
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        canvas: bg.value,
+        alpha: true,
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      // @ts-ignore
+      renderer.useLegacyLights = false;
 
-    renderer.render(scene, camera);
+      camera = new THREE.PerspectiveCamera(
+        50,
+        window.innerWidth / window.innerHeight
+      );
+      camera.position.set(-4, 5, -10);
 
-    lights(scene);
+      // controls
 
-    roundedRect(
-      {
-        width: 100,
-        height: 50,
-        radius: 10,
-        color: 0xaaaaaa,
-        x: 60,
-        y: 0,
-        z: -300,
-      },
-      scene
-    );
+      controls = new OrbitControls(camera, renderer.domElement);
 
-    const particleLight = new THREE.Mesh(
-      new THREE.SphereGeometry(4, 8, 8),
-      new THREE.MeshBasicMaterial({ color: 0xffffff })
-    );
-    scene.add(particleLight);
+      // controls.addEventListener("change", () => {
+      //   console.log(camera.position);
+      // }); // call this only in static scenes (i.e., if there is no animation loop)
 
-    particleLight.add(new THREE.PointLight(0xffffff, 1));
+      controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+      controls.dampingFactor = 0.05;
 
-    // Scroll Animation
+      controls.screenSpacePanning = false;
 
-    const moveCamera = () => {
-      const t = document.body.getBoundingClientRect().top;
+      controls.maxDistance = 100;
 
-      camera.position.z = t * -0.1;
-      camera.position.x = t * -0.002;
-      camera.rotation.y = t * -0.002;
-    };
+      controls.maxPolarAngle = Math.PI / 2;
 
-    document.body.onscroll = moveCamera;
-    moveCamera();
+      // lights
 
-    // Animation Loop
-    const animate = () => {
-      requestAnimationFrame(animate);
+      // const ambientLight = new THREE.AmbientLight(0xffffff, 500);
+      // scene.add(ambientLight);
 
-      const timer = Date.now() * 0.00025;
+      // create a new instance of the loader
+      const loader = new GLTFLoader();
 
-      particleLight.position.x = Math.sin(timer * 7) * 300;
-      particleLight.position.y = Math.cos(timer * 5) * 400;
-      particleLight.position.z = Math.cos(timer * 3) * 300;
+      // load a GLB file
+      loader.load(
+        // path to the GLB file
+        "/room.glb",
 
-      renderer.render(scene, camera);
-    };
+        // callback function that gets called when the file is loaded
+        (gltf) => {
+          // add the loaded object to the scene
+          scene.add(gltf.scene);
+
+          scene.traverse(function (object) {
+            if (isLight(object)) {
+              object.intensity = blenderWattsToLumens(object.intensity);
+              object.castShadow = true;
+            }
+            if (object.isMesh) {
+              object.castShadow = true;
+              object.receiveShadow = true;
+            }
+          });
+
+          mixer = new THREE.AnimationMixer(gltf.scene);
+          const action = mixer.clipAction(gltf.animations[0]);
+          action.play();
+
+          const action2 = mixer.clipAction(gltf.animations[1]);
+          action2.play();
+        },
+
+        // callback function that gets called if there is an error loading the file
+        (error) => {
+          if (error.type === "progress") return;
+          console.error(error);
+        }
+      );
+
+      //
+
+      window.addEventListener("resize", onWindowResize);
+    }
 
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -104,10 +127,30 @@ export const Perspective = component$(() => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    window.addEventListener("resize", onWindowResize, false);
+    function animate() {
+      requestAnimationFrame(animate);
 
-    animate();
+      const delta = clock.getDelta();
+
+      if (mixer) mixer.update(delta);
+
+      controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+
+      render();
+    }
+
+    function render() {
+      renderer.render(scene, camera);
+    }
   });
 
-  return <canvas ref={bg} id="bg" class="fixed top-0" style={{ zIndex: -1 }} />;
+  return (
+    <canvas
+      ref={bg}
+      id="bg"
+      class="fixed top-0"
+      //
+      // style={{ zIndex: -1 }}
+    />
+  );
 });
