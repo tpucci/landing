@@ -11,7 +11,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export function blenderWattsToLumens(watt: number) {
-  return watt / 100;
+  return watt / 500;
 }
 
 export const isLight = (object: Object3D): object is Light => {
@@ -45,6 +45,7 @@ export const Perspective = component$(() => {
       renderer.outputEncoding = THREE.sRGBEncoding;
       // @ts-ignore
       renderer.useLegacyLights = false;
+      renderer.shadowMap.enabled = true;
 
       camera = new THREE.PerspectiveCamera(
         50,
@@ -69,12 +70,9 @@ export const Perspective = component$(() => {
           scene.traverse(function (object) {
             if (isLight(object)) {
               object.intensity = blenderWattsToLumens(object.intensity);
-              object.castShadow = true;
             }
-            if (object.isMesh) {
-              object.castShadow = true;
-              object.receiveShadow = true;
-            }
+            object.castShadow = true;
+            object.receiveShadow = true;
           });
 
           mixer = new THREE.AnimationMixer(gltf.scene);
@@ -83,6 +81,9 @@ export const Perspective = component$(() => {
 
           const action2 = mixer.clipAction(gltf.animations[1]);
           action2.play();
+
+          const action3 = mixer.clipAction(gltf.animations[2]);
+          action3.play();
         },
 
         // callback function that gets called if there is an error loading the file
