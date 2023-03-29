@@ -8,7 +8,6 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export function blenderWattsToLumens(watt: number) {
@@ -25,7 +24,6 @@ export const Perspective = component$(() => {
 
   useClientEffect$(() => {
     let camera: PerspectiveCamera,
-      controls: OrbitControls,
       scene: Scene,
       renderer: WebGLRenderer,
       mixer: AnimationMixer;
@@ -52,29 +50,8 @@ export const Perspective = component$(() => {
         50,
         window.innerWidth / window.innerHeight
       );
-      camera.position.set(-4, 5, -10);
-
-      // controls
-
-      controls = new OrbitControls(camera, renderer.domElement);
-
-      // controls.addEventListener("change", () => {
-      //   console.log(camera.position);
-      // }); // call this only in static scenes (i.e., if there is no animation loop)
-
-      controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-      controls.dampingFactor = 0.05;
-
-      controls.screenSpacePanning = false;
-
-      controls.maxDistance = 100;
-
-      controls.maxPolarAngle = Math.PI / 2;
-
-      // lights
-
-      // const ambientLight = new THREE.AmbientLight(0xffffff, 500);
-      // scene.add(ambientLight);
+      camera.position.set(5, 4, -18);
+      camera.rotation.set(0, -Math.PI, 0);
 
       // create a new instance of the loader
       const loader = new GLTFLoader();
@@ -134,8 +111,6 @@ export const Perspective = component$(() => {
 
       if (mixer) mixer.update(delta);
 
-      controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-
       render();
     }
 
@@ -150,7 +125,7 @@ export const Perspective = component$(() => {
       id="bg"
       class="fixed top-0"
       //
-      // style={{ zIndex: -1 }}
+      style={{ zIndex: -1 }}
     />
   );
 });
