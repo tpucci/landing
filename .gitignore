@@ -42,3 +42,6 @@ package-lock.json
 
 # Partytown
 public/~partytown
+
+# Blender autosaves
+blender/*.blend1
