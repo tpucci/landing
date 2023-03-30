@@ -56,8 +56,6 @@ export const Perspective = component$(() => {
         50,
         window.innerWidth / window.innerHeight
       );
-      camera.position.set(5, 4, -18);
-      camera.rotation.set(0, -Math.PI, 0);
 
       // create a new instance of the loader
       const loader = new GLTFLoader();
@@ -105,6 +103,8 @@ export const Perspective = component$(() => {
             const action = mixer.clipAction(animation);
             action.play();
           }
+
+          renderer.domElement.style.opacity = "100%";
         },
 
         // callback function that gets called if there is an error loading the file
@@ -113,8 +113,6 @@ export const Perspective = component$(() => {
           console.error(error);
         }
       );
-
-      //
 
       window.addEventListener("resize", onWindowResize);
     }
@@ -128,6 +126,18 @@ export const Perspective = component$(() => {
 
     function animate() {
       requestAnimationFrame(animate);
+
+      const scrollTop = document.documentElement.scrollTop;
+      camera.position.set(
+        5 - Math.min(scrollTop / 1000, 4),
+        4 + Math.min(scrollTop / 150, 5),
+        -18 - Math.min(scrollTop / 50, 10)
+      );
+      camera.rotation.set(
+        -(Math.PI * Math.min(scrollTop / 40, 15)) / 180,
+        -Math.PI,
+        0
+      );
 
       const delta = clock.getDelta();
 
@@ -143,7 +153,7 @@ export const Perspective = component$(() => {
 
   return (
     <div class="absolute top-0 bottom-0 right-0 left-0 flex items-stretch overflow-hidden">
-      <canvas ref={bg} id="bg" class="flex-1" />
+      <canvas ref={bg} id="bg" class="flex-1 transition-opacity opacity-0" />
     </div>
   );
 });
