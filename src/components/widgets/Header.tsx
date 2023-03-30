@@ -5,6 +5,8 @@ import Logo from "~/components/atoms/Logo";
 import ToggleTheme from "~/components/core/ToggleTheme";
 
 export default component$(() => {
+  const isScrollingOffset = 100;
+
   const store = useStore({
     isScrolling: false,
   });
@@ -20,9 +22,9 @@ export default component$(() => {
       }`}
       id="header"
       window:onScroll$={() => {
-        if (!store.isScrolling && window.scrollY >= 10) {
+        if (!store.isScrolling && window.scrollY >= isScrollingOffset) {
           store.isScrolling = true;
-        } else if (store.isScrolling && window.scrollY < 10) {
+        } else if (store.isScrolling && window.scrollY < isScrollingOffset) {
           store.isScrolling = false;
         }
       }}

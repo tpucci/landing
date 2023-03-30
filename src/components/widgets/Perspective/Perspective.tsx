@@ -141,12 +141,6 @@ export const Perspective = component$(() => {
   });
 
   return (
-    <canvas
-      ref={bg}
-      id="bg"
-      class="fixed top-0"
-      //
-      style={{ zIndex: -1 }}
-    />
+    <canvas ref={bg} id="bg" class="absolute top-0 bottom-0 right-0 left-0" />
   );
 });
