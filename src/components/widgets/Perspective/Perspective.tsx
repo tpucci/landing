@@ -44,7 +44,8 @@ export const Perspective = component$(() => {
       });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.physicallyCorrectLights = true;
+      // @ts-ignore
+      renderer.useLegacyLights = false;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputEncoding = THREE.sRGBEncoding;
@@ -141,6 +142,8 @@ export const Perspective = component$(() => {
   });
 
   return (
-    <canvas ref={bg} id="bg" class="absolute top-0 bottom-0 right-0 left-0" />
+    <div class="absolute top-0 bottom-0 right-0 left-0 flex items-stretch overflow-hidden">
+      <canvas ref={bg} id="bg" class="flex-1" />
+    </div>
   );
 });

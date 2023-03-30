@@ -3,7 +3,7 @@ import { Perspective } from "./Perspective/Perspective";
 
 export default component$(() => {
   return (
-    <div>
+    <div class="relative">
       <Perspective />
       <section class="bg-gradient-to-b md:bg-gradient-to-r from-sky-100 via-purple-50/10 to-white/20 dark:from-slate-900 dark:via-purple-900/10 dark:to-sky-900/20 mt-[-72px] relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 md:flex md:h-screen 2xl:h-auto pt-[72px]">
