@@ -10,8 +10,10 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+export const WATTS_DIMINUTION = 1000;
+
 export function blenderWattsToLumens(watt: number) {
-  return watt / 500;
+  return watt / WATTS_DIMINUTION;
 }
 
 export const isLight = (object: Object3D): object is Light => {
@@ -42,10 +44,12 @@ export const Perspective = component$(() => {
       });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.outputEncoding = THREE.sRGBEncoding;
-      // @ts-ignore
-      renderer.useLegacyLights = false;
+      renderer.physicallyCorrectLights = true;
       renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 2;
 
       camera = new THREE.PerspectiveCamera(
         50,
@@ -56,6 +60,24 @@ export const Perspective = component$(() => {
 
       // create a new instance of the loader
       const loader = new GLTFLoader();
+
+      // lights
+
+      const light = new THREE.AmbientLight(0x404040, WATTS_DIMINUTION * 3); // soft white light
+      scene.add(light);
+
+      const spotLight = new THREE.SpotLight(0xffffff, WATTS_DIMINUTION * 100);
+      spotLight.position.set(5, 10, 10);
+      spotLight.castShadow = true;
+
+      spotLight.shadow.mapSize.width = 2048;
+      spotLight.shadow.mapSize.height = 2048;
+
+      spotLight.shadow.camera.near = 1;
+      spotLight.shadow.camera.fov = 30;
+      spotLight.penumbra = 1;
+
+      scene.add(spotLight);
 
       // load a GLB file
       loader.load(
@@ -70,20 +92,18 @@ export const Perspective = component$(() => {
           scene.traverse(function (object) {
             if (isLight(object)) {
               object.intensity = blenderWattsToLumens(object.intensity);
+            } else {
+              object.receiveShadow = true;
+              object.castShadow = true;
             }
-            object.castShadow = true;
-            object.receiveShadow = true;
           });
 
           mixer = new THREE.AnimationMixer(gltf.scene);
-          const action = mixer.clipAction(gltf.animations[0]);
-          action.play();
 
-          const action2 = mixer.clipAction(gltf.animations[1]);
-          action2.play();
-
-          const action3 = mixer.clipAction(gltf.animations[2]);
-          action3.play();
+          for (const animation of gltf.animations) {
+            const action = mixer.clipAction(animation);
+            action.play();
+          }
         },
 
         // callback function that gets called if there is an error loading the file
