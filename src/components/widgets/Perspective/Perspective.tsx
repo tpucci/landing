@@ -129,9 +129,9 @@ export const Perspective = component$(() => {
 
       const scrollTop = document.documentElement.scrollTop;
       camera.position.set(
-        5 - Math.min(scrollTop / 1000, 4),
+        10 - Math.min(scrollTop / 1000, 4),
         4 + Math.min(scrollTop / 150, 5),
-        -18 - Math.min(scrollTop / 50, 10)
+        -22 - Math.min(scrollTop / 50, 10)
       );
       camera.rotation.set(
         -(Math.PI * Math.min(scrollTop / 40, 15)) / 180,
