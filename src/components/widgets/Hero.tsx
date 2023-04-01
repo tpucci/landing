@@ -36,7 +36,6 @@ export default component$(() => {
                         class="btn btn-primary sm:mb-0 w-full"
                         href="https://cadence.page"
                         target="_blank"
-                        rel="noopener"
                       >
                         Try it
                       </a>
