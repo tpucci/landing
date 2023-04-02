@@ -12,6 +12,7 @@ import { DarkThemeLauncher } from "~/components/core/DarkThemeLauncher";
 import globalStyles from "~/assets/styles/global.css?inline";
 import { VercelAnalytics } from "./components/partytown/VercelAnalytics";
 import { VercelWebVitals } from "./components/utils/VercelWebVitals";
+import { useDarkThemeContextProvider } from "./features/theme/useDarkThemeContextProvider";
 
 export default component$(() => {
   /**
@@ -22,6 +23,7 @@ export default component$(() => {
    */
 
   useStyles$(globalStyles);
+  useDarkThemeContextProvider();
 
   return (
     <QwikCityProvider>
