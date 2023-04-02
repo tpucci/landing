@@ -12,7 +12,9 @@ export default component$(() => {
               <div>
                 <h1 class="text-5xl md:text-[3.48rem] font-bold leading-tighter tracking-tighter mb-4 font-heading px-4 md:px-0">
                   <span>Intelligible</span>{" "}
-                  <span class="text-primary-500 drop-shadow-lg">Roadmap</span>{" "}
+                  <span class="text-primary-500 drop-shadow-lg underline decoration-wavy decoration-4 decoration-primary-500 underline-offset-8">
+                    Roadmap
+                  </span>{" "}
                   <span>to align the team</span>
                   <br class="hidden lg:block" />{" "}
                   <span class="hidden lg:inline">with the plan</span>
