@@ -128,8 +128,8 @@ export const Perspective = component$(() => {
       window.addEventListener("resize", onWindowResize);
 
       setTimeout(() => {
-        renderer.domElement.style.transitionDuration = "800ms";
-      }, 0);
+        renderer.domElement.style.transitionDuration = "2000ms";
+      }, 300);
     }
 
     function onWindowResize() {
