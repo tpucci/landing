@@ -9,6 +9,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import gsap from "gsap";
 
 export const WATTS_DIMINUTION = 1000;
 
@@ -31,7 +32,6 @@ export const Perspective = component$(() => {
       mixer: AnimationMixer;
     const clock = new THREE.Clock();
     init();
-    //render(); // remove when using next line for animation loop (requestAnimationFrame)
     animate();
 
     function init() {
@@ -57,7 +57,6 @@ export const Perspective = component$(() => {
         window.innerWidth / window.innerHeight
       );
 
-      // create a new instance of the loader
       const loader = new GLTFLoader();
 
       // lights
@@ -78,14 +77,10 @@ export const Perspective = component$(() => {
 
       scene.add(spotLight);
 
-      // load a GLB file
       loader.load(
-        // path to the GLB file
         "/room.glb",
 
-        // callback function that gets called when the file is loaded
         (gltf) => {
-          // add the loaded object to the scene
           scene.add(gltf.scene);
 
           scene.traverse(function (object) {
@@ -107,14 +102,34 @@ export const Perspective = component$(() => {
           renderer.domElement.style.opacity = "100%";
         },
 
-        // callback function that gets called if there is an error loading the file
         (error) => {
           if (error.type === "progress") return;
           console.error(error);
         }
       );
 
+      window.addEventListener("scroll", () => {
+        const scrollTop = document.documentElement.scrollTop;
+
+        gsap.to(camera.position, {
+          x: 10 - Math.min(scrollTop / 1000, 4),
+          y: 4 + Math.min(scrollTop / 150, 5),
+          z: -22 - Math.min(scrollTop / 50, 10),
+        });
+
+        gsap.to(camera.rotation, {
+          x: -(Math.PI * Math.min(scrollTop / 40, 15)) / 180,
+        });
+      });
+
+      camera.position.set(10, 4, -18);
+      camera.rotation.set(0, -Math.PI, 0);
+
       window.addEventListener("resize", onWindowResize);
+
+      setTimeout(() => {
+        renderer.domElement.style.transitionDuration = "800ms";
+      }, 0);
     }
 
     function onWindowResize() {
@@ -126,19 +141,6 @@ export const Perspective = component$(() => {
 
     function animate() {
       requestAnimationFrame(animate);
-
-      const scrollTop = document.documentElement.scrollTop;
-      camera.position.set(
-        10 - Math.min(scrollTop / 1000, 4),
-        4 + Math.min(scrollTop / 150, 5),
-        -22 - Math.min(scrollTop / 50, 10)
-      );
-      camera.rotation.set(
-        -(Math.PI * Math.min(scrollTop / 40, 15)) / 180,
-        -Math.PI,
-        0
-      );
-
       const delta = clock.getDelta();
 
       if (mixer) mixer.update(delta);
