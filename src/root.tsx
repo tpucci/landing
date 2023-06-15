@@ -6,10 +6,11 @@ import {
 } from "@builder.io/qwik-city";
 import { QwikPartytown } from "./components/partytown/Partytown";
 
-import { RouterHead } from "~/components/core/RouterHead";
 import { DarkThemeLauncher } from "~/components/core/DarkThemeLauncher";
+import { RouterHead } from "~/components/core/RouterHead";
 
 import globalStyles from "~/assets/styles/global.css?inline";
+import { CaptFlow } from "./components/partytown/CaptFlow";
 import { VercelAnalytics } from "./components/partytown/VercelAnalytics";
 import { VercelWebVitals } from "./components/utils/VercelWebVitals";
 import { useDarkThemeContextProvider } from "./features/theme/useDarkThemeContextProvider";
@@ -35,6 +36,7 @@ export default component$(() => {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <CaptFlow />
         <VercelAnalytics />
         <VercelWebVitals />
         <QwikPartytown />
